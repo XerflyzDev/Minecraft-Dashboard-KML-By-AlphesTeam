@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import { AuthControls } from "@/components/auth-controls";
+import { SidebarDiscordButton } from "@/components/sidebar-discord-button";
 import { isDiscordAuthConfigured } from "@/lib/auth-env";
 
 const navItems = [
@@ -87,6 +88,8 @@ export function DashboardShell({
               );
             })}
           </nav>
+
+          <SidebarDiscordButton authConfigured={authConfigured} />
 
           <div className="mt-12 space-y-3 rounded-[1.7rem] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-4">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Live services</p>
