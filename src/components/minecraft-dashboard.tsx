@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { startTransition, useEffect, useState } from "react";
 
 import type { PlayerSnapshot, ServerSnapshot } from "@/lib/minecraft-types";
@@ -103,6 +104,20 @@ export function MinecraftDashboard({
                   UI is ready to mirror a Paper or Spigot server as soon as the
                   plugin starts posting data.
                 </p>
+                <div className="flex flex-wrap gap-3 pt-2">
+                  <Link
+                    href="/admin"
+                    className="inline-flex items-center rounded-full border border-cyan-300/35 bg-cyan-300/12 px-4 py-2 text-sm font-semibold text-cyan-50 transition hover:bg-cyan-300/18"
+                  >
+                    Open admin setup guide
+                  </Link>
+                  <a
+                    href="#plugin-payload"
+                    className="inline-flex items-center rounded-full border border-white/12 bg-white/6 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:bg-white/10"
+                  >
+                    View payload contract
+                  </a>
+                </div>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -216,7 +231,10 @@ export function MinecraftDashboard({
           </div>
 
           <div className="grid gap-6">
-            <aside className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.92),rgba(2,6,23,0.92))] p-5">
+            <aside
+              id="plugin-payload"
+              className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.92),rgba(2,6,23,0.92))] p-5"
+            >
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">
                 Plugin Payload
               </p>

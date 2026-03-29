@@ -23,6 +23,11 @@ npm install
 npm run dev
 ```
 
+Open:
+
+- `/` for the live dashboard
+- `/admin` for the token and plugin setup guide
+
 ## Environment
 
 Create `.env.local` from `.env.example` if you want the POST endpoint to require a shared bearer token.
