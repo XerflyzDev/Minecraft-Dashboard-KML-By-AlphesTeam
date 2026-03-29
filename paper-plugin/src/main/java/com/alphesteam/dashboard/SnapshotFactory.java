@@ -20,7 +20,7 @@ public final class SnapshotFactory {
         this.plugin = plugin;
     }
 
-    public ServerSnapshot createSnapshot() {
+    public ServerSnapshot createSnapshot(BridgeMetrics bridgeMetrics) {
         World primaryWorld = Bukkit.getWorlds().stream()
                 .filter(world -> world.getEnvironment() == World.Environment.NORMAL)
                 .findFirst()
@@ -41,7 +41,8 @@ public final class SnapshotFactory {
                 players.size(),
                 Bukkit.getMaxPlayers(),
                 resolveDifficulty(primaryWorld.getDifficulty()),
-                players
+                players,
+                bridgeMetrics
         );
     }
 

@@ -19,6 +19,7 @@ function formatAge(seconds: number) {
 export default function StatusPage() {
   const health = getDashboardHealth();
   const snapshot = getSnapshot();
+  const bridge = snapshot.bridge;
 
   const tone =
     health.status === "live"
@@ -89,32 +90,43 @@ export default function StatusPage() {
             </div>
           </section>
 
-          <DashboardTable title="Latest player coordinates">
-            <div className="space-y-3">
-              {snapshot.players.map((player) => (
-              <div
-                  key={player.uuid}
-                  className="grid gap-4 rounded-[1.5rem] border border-white/8 bg-[#100c19] px-4 py-4 md:grid-cols-[1fr_0.9fr_1fr]"
-                >
-                  <div>
-                    <p className="font-semibold text-white">{player.name}</p>
-                    <p className="mt-1 text-sm text-slate-400">{player.world}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Biome</p>
-                    <p className="mt-1 text-sm text-slate-200">{player.biome}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500">x y z</p>
-                    <p className="mt-1 font-mono text-sm text-white">
-                      {player.position.x} {player.position.y} {player.position.z}
-                    </p>
-                  </div>
-                </div>
-              ))}
+          <DashboardTable title="Bridge metrics">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <ValueTile label="Last push status" value={bridge?.lastPushStatus ?? "not reported"} />
+              <ValueTile label="Last push at" value={bridge?.lastPushAt ? new Date(bridge.lastPushAt).toLocaleString("en-GB") : "not reported"} />
+              <ValueTile label="Queue size" value={bridge ? `${bridge.queueSize}` : "not reported"} />
+              <ValueTile label="Retry count" value={bridge ? `${bridge.retryCount}` : "not reported"} />
+              <ValueTile label="Total pushes" value={bridge ? `${bridge.totalPushCount}` : "not reported"} />
+              <ValueTile label="Last error" value={bridge?.lastError ?? "none"} />
             </div>
           </DashboardTable>
         </div>
+
+        <DashboardTable title="Latest player coordinates">
+          <div className="space-y-3">
+            {snapshot.players.map((player) => (
+              <div
+                key={player.uuid}
+                className="grid gap-4 rounded-[1.5rem] border border-white/8 bg-[#100c19] px-4 py-4 md:grid-cols-[1fr_0.9fr_1fr]"
+              >
+                <div>
+                  <p className="font-semibold text-white">{player.name}</p>
+                  <p className="mt-1 text-sm text-slate-400">{player.world}</p>
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Biome</p>
+                  <p className="mt-1 text-sm text-slate-200">{player.biome}</p>
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500">x y z</p>
+                  <p className="mt-1 font-mono text-sm text-white">
+                    {player.position.x} {player.position.y} {player.position.z}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </DashboardTable>
       </div>
     </DashboardShell>
   );

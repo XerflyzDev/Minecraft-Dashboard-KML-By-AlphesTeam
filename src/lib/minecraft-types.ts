@@ -16,6 +16,15 @@ export type PlayerSnapshot = {
   facing: string;
 };
 
+export type BridgeMetrics = {
+  queueSize: number;
+  lastPushStatus: string;
+  lastPushAt: string | null;
+  lastError: string | null;
+  totalPushCount: number;
+  retryCount: number;
+};
+
 export type ServerSnapshot = {
   serverName: string;
   updatedAt: string;
@@ -27,6 +36,7 @@ export type ServerSnapshot = {
   tps: number;
   difficulty: string;
   players: PlayerSnapshot[];
+  bridge?: BridgeMetrics;
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -65,6 +75,18 @@ function isPlayerSnapshot(value: unknown): value is PlayerSnapshot {
   );
 }
 
+function isBridgeMetrics(value: unknown): value is BridgeMetrics {
+  return (
+    isRecord(value) &&
+    typeof value.queueSize === "number" &&
+    typeof value.lastPushStatus === "string" &&
+    (typeof value.lastPushAt === "string" || value.lastPushAt === null) &&
+    (typeof value.lastError === "string" || value.lastError === null) &&
+    typeof value.totalPushCount === "number" &&
+    typeof value.retryCount === "number"
+  );
+}
+
 export function isServerSnapshot(value: unknown): value is ServerSnapshot {
   return (
     isRecord(value) &&
@@ -78,6 +100,7 @@ export function isServerSnapshot(value: unknown): value is ServerSnapshot {
     typeof value.tps === "number" &&
     typeof value.difficulty === "string" &&
     Array.isArray(value.players) &&
-    value.players.every(isPlayerSnapshot)
+    value.players.every(isPlayerSnapshot) &&
+    (value.bridge === undefined || isBridgeMetrics(value.bridge))
   );
 }

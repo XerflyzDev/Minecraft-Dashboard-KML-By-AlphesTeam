@@ -12,6 +12,7 @@ public record ServerSnapshot(
         int onlinePlayers,
         int maxPlayers,
         String difficulty,
-        List<PlayerSnapshot> players
+        List<PlayerSnapshot> players,
+        BridgeMetrics bridge
 ) {
 }

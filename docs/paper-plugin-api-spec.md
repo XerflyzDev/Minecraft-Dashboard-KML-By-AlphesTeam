@@ -21,6 +21,7 @@ Expose one server snapshot that includes:
 - Health
 - Food
 - Ping
+- Bridge delivery metrics
 
 ## Recommended architecture
 
@@ -58,6 +59,14 @@ Authorization: Bearer <plugin-secret>
   "onlinePlayers": 4,
   "maxPlayers": 20,
   "difficulty": "hard",
+  "bridge": {
+    "queueSize": 0,
+    "lastPushStatus": "success",
+    "lastPushAt": "2026-03-29T18:25:00+07:00",
+    "lastError": null,
+    "totalPushCount": 42,
+    "retryCount": 3
+  },
   "players": [
     {
       "uuid": "8667ba71-b85a-4004-af54-457a9734eed7",
@@ -128,6 +137,15 @@ type PlayerSnapshot = {
   ping: number;
 };
 
+type BridgeMetrics = {
+  queueSize: number;
+  lastPushStatus: string;
+  lastPushAt: string | null;
+  lastError: string | null;
+  totalPushCount: number;
+  retryCount: number;
+};
+
 type ServerSnapshot = {
   serverName: string;
   updatedAt: string;
@@ -138,6 +156,7 @@ type ServerSnapshot = {
   onlinePlayers: number;
   maxPlayers: number;
   difficulty: string;
+  bridge?: BridgeMetrics;
   players: PlayerSnapshot[];
 };
 ```
@@ -158,6 +177,12 @@ type ServerSnapshot = {
 - `position`: player location block or precise coordinates
 - `facing`: derive from yaw or cardinal direction helper
 - `ping`: available directly on Paper more conveniently
+- `bridge.queueSize`: current retry queue length in the plugin
+- `bridge.lastPushStatus`: last observed delivery status such as `success` or `http-500`
+- `bridge.lastPushAt`: last attempted or successful push timestamp
+- `bridge.lastError`: latest response body or exception summary when available
+- `bridge.totalPushCount`: successful push count
+- `bridge.retryCount`: cumulative retry enqueue count
 
 ## Security
 

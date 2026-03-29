@@ -10,6 +10,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
@@ -24,6 +27,11 @@ public final class SnapshotPublisher {
     private BukkitTask intervalTask;
     private BukkitTask retryTask;
     private volatile boolean pushInFlight;
+    private volatile String lastPushStatus = "never";
+    private volatile String lastPushAt = null;
+    private volatile String lastError = null;
+    private volatile int totalPushCount;
+    private volatile int retryCount;
 
     public SnapshotPublisher(MinecraftDashboardPlugin plugin) {
         this.plugin = plugin;
@@ -83,7 +91,7 @@ public final class SnapshotPublisher {
     }
 
     private void pushFreshSnapshot(String reason) {
-        pushSnapshotSafely(new QueuedSnapshot(snapshotFactory.createSnapshot(), reason, 0));
+        pushSnapshotSafely(new QueuedSnapshot(snapshotFactory.createSnapshot(createBridgeMetrics()), reason, 0));
     }
 
     private void flushRetryQueue() {
@@ -141,12 +149,20 @@ public final class SnapshotPublisher {
         HttpResponse<String> response = httpClient.send(requestBuilder.build(), HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() >= 300) {
+            lastPushStatus = "http-" + response.statusCode();
+            lastPushAt = nowIso();
+            lastError = response.body();
             enqueueForRetry(queuedSnapshot.nextAttempt("http-" + response.statusCode()));
             plugin.getLogger().warning(
                     "Dashboard endpoint returned HTTP " + response.statusCode() + " for " + queuedSnapshot.reason()
             );
             return;
         }
+
+        totalPushCount += 1;
+        lastPushStatus = "success";
+        lastPushAt = nowIso();
+        lastError = null;
 
         if (queuedSnapshot.attempt() > 0) {
             plugin.getLogger().info("Retried snapshot delivery succeeded for " + queuedSnapshot.reason() + ".");
@@ -160,6 +176,28 @@ public final class SnapshotPublisher {
             }
 
             retryQueue.offer(queuedSnapshot);
+            retryCount += 1;
         }
+    }
+
+    private BridgeMetrics createBridgeMetrics() {
+        int queueSize;
+
+        synchronized (retryQueue) {
+            queueSize = retryQueue.size();
+        }
+
+        return new BridgeMetrics(
+                queueSize,
+                lastPushStatus,
+                lastPushAt,
+                lastError,
+                totalPushCount,
+                retryCount
+        );
+    }
+
+    private String nowIso() {
+        return OffsetDateTime.now(ZoneId.systemDefault()).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
     }
 }
