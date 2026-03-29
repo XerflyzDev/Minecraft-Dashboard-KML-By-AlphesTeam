@@ -7,7 +7,7 @@ Realtime Minecraft Java server dashboard built with Next.js.
 - Dashboard landing page for server status
 - Player cards with avatar, world, biome, xyz, health, food, and ping
 - Paper or Spigot plugin API contract
-- Ready-to-extend layout for snapshot API and WebSocket updates
+- Dark control-room layout with live snapshot streaming
 - Paper plugin with event-based pushes and retry queue
 
 ## Project structure
@@ -43,10 +43,9 @@ cd paper-plugin
 mvn package
 ```
 
-## Next step
+## Live routes
 
-Implement:
-
-- `POST /api/minecraft/snapshot`
 - `GET /api/minecraft/snapshot`
-- optional WebSocket broadcast at `/ws/minecraft/live`
+- `POST /api/minecraft/snapshot`
+- `GET /api/minecraft/live`
+- `GET /api/minecraft/status`
