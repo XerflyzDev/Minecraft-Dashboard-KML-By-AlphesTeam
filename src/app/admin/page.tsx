@@ -1,4 +1,5 @@
 import { DashboardShell, HighlightPanel } from "@/components/dashboard-shell";
+import { TestSnapshotButton } from "./test-snapshot-button";
 
 const envExample = `AUTH_SECRET=replace-with-random-secret
 DISCORD_CLIENT_ID=replace-with-discord-client-id
@@ -43,6 +44,19 @@ const paths = [
     path: "src/app/api/minecraft/status/route.ts",
     description: "Health endpoint for external monitoring.",
   },
+  {
+    path: "src/app/api/minecraft/test-snapshot/route.ts",
+    description: "Manual test route that pushes a safe sample snapshot into the dashboard.",
+  },
+];
+
+const discordSteps = [
+  "Open the Discord Developer Portal and create a new application if you do not already have one.",
+  "In General Information, copy the Client ID and keep it for Vercel as DISCORD_CLIENT_ID.",
+  "Open OAuth2 in the left sidebar and copy the Client Secret for DISCORD_CLIENT_SECRET.",
+  "In OAuth2, add this Redirect URL exactly: https://minecraft-dashboard-kml.vercel.app/api/auth/callback/discord",
+  "Save changes in the Discord portal, then add AUTH_SECRET, DISCORD_CLIENT_ID, and DISCORD_CLIENT_SECRET in Vercel project settings.",
+  "Redeploy the project after adding env vars so protected routes begin using Discord login.",
 ];
 
 export default function AdminPage() {
@@ -82,18 +96,42 @@ export default function AdminPage() {
         </div>
 
         <div className="grid gap-6 2xl:grid-cols-[1fr_1fr]">
+          <section className="rounded-[1.9rem] border border-emerald-300/14 bg-emerald-400/8 p-6">
+            <p className="text-xs uppercase tracking-[0.24em] text-emerald-100/70">Production test</p>
+            <h2 className="mt-2 text-2xl font-semibold text-white">Send a sample snapshot now</h2>
+            <p className="mt-3 max-w-xl text-sm leading-7 text-slate-200">
+              This does not use fake UI data in the app shell. It triggers the real snapshot flow, updates stored state,
+              and should appear on the dashboard and status pages immediately.
+            </p>
+            <div className="mt-6">
+              <TestSnapshotButton />
+            </div>
+          </section>
+
           <section className="rounded-[1.9rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Manual test</p>
             <h2 className="mt-2 text-2xl font-semibold text-white">POST one snapshot before launching the plugin</h2>
             <CodeBlock code={curlExample} />
           </section>
+        </div>
 
+        <div className="grid gap-6 2xl:grid-cols-[1fr_1fr]">
           <section className="rounded-[1.9rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Checklist</p>
             <h2 className="mt-2 text-2xl font-semibold text-white">What to verify</h2>
             <div className="mt-4 space-y-3">
               {checklist.map((item) => (
                 <ChecklistItem key={item} text={item} />
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-[1.9rem] border border-white/10 bg-[#110d1d]/92 p-6">
+            <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Discord Developer Portal</p>
+            <h2 className="mt-2 text-2xl font-semibold text-white">Step-by-step setup</h2>
+            <div className="mt-4 space-y-3">
+              {discordSteps.map((item, index) => (
+                <ChecklistItem key={item} text={`${index + 1}. ${item}`} />
               ))}
             </div>
           </section>

@@ -63,8 +63,13 @@ function loadStateFromDisk() {
 }
 
 function persistState(state: DashboardState) {
-  mkdirSync(DATA_DIR, { recursive: true });
-  writeFileSync(STATE_FILE, JSON.stringify(state, null, 2), "utf8");
+  try {
+    mkdirSync(DATA_DIR, { recursive: true });
+    writeFileSync(STATE_FILE, JSON.stringify(state, null, 2), "utf8");
+  } catch {
+    // Serverless hosts such as Vercel may not allow writes to the app directory.
+    // Keep serving the latest in-memory snapshot even when disk persistence is unavailable.
+  }
 }
 
 export function getDashboardState() {
