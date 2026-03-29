@@ -35,7 +35,10 @@ The latest dashboard state is persisted to `data/dashboard-state.json`, so the n
 
 ## Environment
 
-Create `.env.local` from `.env.example` if you want the POST endpoint to require a shared bearer token.
+Create `.env.local` from `.env.example`.
+
+- `AUTH_SECRET`, `DISCORD_CLIENT_ID`, and `DISCORD_CLIENT_SECRET` enable Discord login.
+- `MINECRAFT_DASHBOARD_TOKEN` protects the Paper plugin push endpoint.
 
 ## Paper plugin
 

@@ -1,6 +1,9 @@
 import { DashboardShell, HighlightPanel } from "@/components/dashboard-shell";
 
-const envExample = `MINECRAFT_DASHBOARD_TOKEN=change-me`;
+const envExample = `AUTH_SECRET=replace-with-random-secret
+DISCORD_CLIENT_ID=replace-with-discord-client-id
+DISCORD_CLIENT_SECRET=replace-with-discord-client-secret
+MINECRAFT_DASHBOARD_TOKEN=change-me`;
 
 const pluginConfig = `dashboard:
   enabled: true

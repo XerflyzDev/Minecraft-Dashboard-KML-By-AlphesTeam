@@ -13,6 +13,9 @@ import {
   Users,
 } from "lucide-react";
 
+import { AuthControls } from "@/components/auth-controls";
+import { isDiscordAuthConfigured } from "@/lib/auth-env";
+
 const navItems = [
   {
     href: "/",
@@ -47,6 +50,8 @@ export function DashboardShell({
   subtitle: string;
   children: ReactNode;
 }) {
+  const authConfigured = isDiscordAuthConfigured();
+
   return (
     <main className="min-h-screen px-2 py-2 text-white sm:px-4 lg:px-5">
       <div className="mx-auto grid min-h-[calc(100vh-1rem)] w-full max-w-[1800px] overflow-hidden rounded-[2.25rem] border border-white/10 bg-[#0a0813]/95 shadow-[0_30px_120px_rgba(0,0,0,0.45)] lg:grid-cols-[296px_1fr]">
@@ -135,6 +140,7 @@ export function DashboardShell({
                     <Radio className="h-4 w-4 text-emerald-300" />
                     <span className="whitespace-nowrap">Live stream active</span>
                   </div>
+                  <AuthControls authConfigured={authConfigured} />
                   <button
                     aria-label="Notifications"
                     className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/4 text-slate-200"
