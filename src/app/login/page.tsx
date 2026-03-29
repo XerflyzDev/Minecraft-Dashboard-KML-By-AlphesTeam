@@ -6,13 +6,31 @@ import { DashboardShell, HighlightPanel } from "@/components/dashboard-shell";
 import { isDiscordAuthConfigured } from "@/lib/auth-env";
 import { authOptions } from "@/lib/auth-options";
 
+import { AutoDiscordRedirect } from "./auto-discord-redirect";
 import { LoginButton } from "./sign-in-button";
 
-export default async function LoginPage() {
+function getSafeCallbackUrl(from?: string) {
+  if (!from || !from.startsWith("/") || from.startsWith("//")) {
+    return "/";
+  }
+
+  return from;
+}
+
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const authConfigured = isDiscordAuthConfigured();
   const session = authConfigured
     ? await getServerSession(authOptions)
     : null;
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const fromParam = resolvedSearchParams?.from;
+  const callbackUrl = getSafeCallbackUrl(
+    typeof fromParam === "string" ? fromParam : undefined,
+  );
 
   return (
     <DashboardShell
@@ -48,9 +66,15 @@ export default async function LoginPage() {
               on its own bearer-token flow.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <LoginButton disabled={!authConfigured || Boolean(session?.user)} />
+              {authConfigured && !session?.user ? (
+                <AutoDiscordRedirect callbackUrl={callbackUrl} />
+              ) : null}
+              <LoginButton
+                disabled={!authConfigured || Boolean(session?.user)}
+                callbackUrl={callbackUrl}
+              />
               <Link
-                href={session?.user ? "/" : "/admin"}
+                href={session?.user ? callbackUrl : "/admin"}
                 className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/4 px-4 py-3 text-sm font-semibold text-slate-100 transition hover:bg-white/8"
               >
                 <LogIn className="h-4 w-4" />
