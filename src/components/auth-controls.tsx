@@ -1,7 +1,7 @@
 "use client";
 
-import { LogIn, LogOut } from "lucide-react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { LogOut } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
 
 export function AuthControls({
   authConfigured,
@@ -28,13 +28,9 @@ export function AuthControls({
 
   if (!session?.user) {
     return (
-      <button
-        onClick={() => signIn("discord")}
-        className="inline-flex items-center gap-2 rounded-full border border-violet-300/18 bg-violet-400/12 px-4 py-3 text-sm font-semibold text-violet-50 transition hover:bg-violet-400/18"
-      >
-        <LogIn className="h-4 w-4" />
-        <span>Sign in with Discord</span>
-      </button>
+      <div className="rounded-full border border-emerald-300/16 bg-emerald-400/8 px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">
+        Discord auth enabled
+      </div>
     );
   }
 

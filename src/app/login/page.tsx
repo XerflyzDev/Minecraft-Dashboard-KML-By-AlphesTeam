@@ -7,7 +7,6 @@ import { isDiscordAuthConfigured } from "@/lib/auth-env";
 import { authOptions } from "@/lib/auth-options";
 
 import { AutoDiscordRedirect } from "./auto-discord-redirect";
-import { LoginButton } from "./sign-in-button";
 
 function getSafeCallbackUrl(from?: string) {
   if (!from || !from.startsWith("/") || from.startsWith("//")) {
@@ -47,7 +46,6 @@ export default async function LoginPage({
               ? "The website is ready for Discord OAuth. After sign-in, protected routes will unlock while the plugin keeps using its bearer token for server-to-server updates."
               : "Discord OAuth is not fully configured yet. Add AUTH_SECRET, DISCORD_CLIENT_ID, and DISCORD_CLIENT_SECRET to enable sign-in."
           }
-          cta={session?.user ? "Go to dashboard" : "Discord access"}
           meta={
             <div className="grid gap-4">
               <Metric label="Session status" value={session?.user ? "Authenticated" : "Signed out"} />
@@ -69,10 +67,6 @@ export default async function LoginPage({
               {authConfigured && !session?.user ? (
                 <AutoDiscordRedirect callbackUrl={callbackUrl} />
               ) : null}
-              <LoginButton
-                disabled={!authConfigured || Boolean(session?.user)}
-                callbackUrl={callbackUrl}
-              />
               <Link
                 href={session?.user ? callbackUrl : "/admin"}
                 className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/4 px-4 py-3 text-sm font-semibold text-slate-100 transition hover:bg-white/8"

@@ -178,7 +178,7 @@ export function HighlightPanel({
 }: {
   title: string;
   description: string;
-  cta: string;
+  cta?: string;
   meta: ReactNode;
 }) {
   return (
@@ -186,9 +186,11 @@ export function HighlightPanel({
       <div className="space-y-5">
         <h2 className="max-w-2xl text-3xl font-semibold tracking-tight text-white xl:text-[2.4rem]">{title}</h2>
         <p className="max-w-2xl text-sm leading-8 text-slate-300 sm:text-[15px]">{description}</p>
-        <button className="rounded-full bg-[linear-gradient(135deg,#d8ccff,#a78bfa)] px-5 py-3.5 text-sm font-semibold text-[#171126] shadow-[0_14px_34px_rgba(167,139,250,0.28)] transition hover:scale-[1.01]">
-          {cta}
-        </button>
+        {cta ? (
+          <button className="rounded-full bg-[linear-gradient(135deg,#d8ccff,#a78bfa)] px-5 py-3.5 text-sm font-semibold text-[#171126] shadow-[0_14px_34px_rgba(167,139,250,0.28)] transition hover:scale-[1.01]">
+            {cta}
+          </button>
+        ) : null}
       </div>
       <div className="rounded-[1.8rem] border border-white/8 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_26%),linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.02))] p-5">
         {meta}
