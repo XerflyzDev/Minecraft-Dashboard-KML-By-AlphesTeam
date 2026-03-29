@@ -31,6 +31,7 @@ Open:
 - `/status` for health and freshness checks
 
 The dashboard now starts in an idle state until the first real Paper snapshot is posted.
+The latest dashboard state is persisted to `data/dashboard-state.json`, so the newest snapshot survives a web app restart.
 
 ## Environment
 
