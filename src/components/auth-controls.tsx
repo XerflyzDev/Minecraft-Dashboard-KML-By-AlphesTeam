@@ -1,7 +1,6 @@
 "use client";
 
-import { LogOut } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 export function AuthControls({
   authConfigured,
@@ -21,26 +20,20 @@ export function AuthControls({
   if (status === "loading") {
     return (
       <div className="rounded-full border border-white/10 bg-white/4 px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">
-        Loading session
-      </div>
-    );
-  }
-
-  if (!session?.user) {
-    return (
-      <div className="rounded-full border border-emerald-300/16 bg-emerald-400/8 px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">
-        Discord auth enabled
+        Checking Discord session
       </div>
     );
   }
 
   return (
-    <button
-      onClick={() => signOut({ callbackUrl: "/login" })}
-      className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/4 px-4 py-3 text-sm font-semibold text-slate-100 transition hover:bg-white/8"
+    <div
+      className={`rounded-full px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] ${
+        session?.user
+          ? "border border-emerald-300/16 bg-emerald-400/8 text-emerald-100"
+          : "border border-violet-300/16 bg-violet-400/8 text-violet-100"
+      }`}
     >
-      <LogOut className="h-4 w-4" />
-      <span>Sign out</span>
-    </button>
+      {session?.user ? "Discord connected" : "Discord login available"}
+    </div>
   );
 }

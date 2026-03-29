@@ -6,8 +6,6 @@ import { DashboardShell, HighlightPanel } from "@/components/dashboard-shell";
 import { isDiscordAuthConfigured } from "@/lib/auth-env";
 import { authOptions } from "@/lib/auth-options";
 
-import { AutoDiscordRedirect } from "./auto-discord-redirect";
-
 function getSafeCallbackUrl(from?: string) {
   if (!from || !from.startsWith("/") || from.startsWith("//")) {
     return "/";
@@ -65,7 +63,9 @@ export default async function LoginPage({
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               {authConfigured && !session?.user ? (
-                <AutoDiscordRedirect callbackUrl={callbackUrl} />
+                <p className="text-sm leading-7 text-violet-100/80">
+                  Use the Discord button in the left sidebar to continue.
+                </p>
               ) : null}
               <Link
                 href={session?.user ? callbackUrl : "/admin"}

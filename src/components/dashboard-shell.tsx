@@ -15,6 +15,7 @@ import {
 
 import { AuthControls } from "@/components/auth-controls";
 import { SidebarDiscordButton } from "@/components/sidebar-discord-button";
+import { TopbarIdentity } from "@/components/topbar-identity";
 import { isDiscordAuthConfigured } from "@/lib/auth-env";
 
 const navItems = [
@@ -150,15 +151,7 @@ export function DashboardShell({
                   >
                     <Bell className="h-4 w-4" />
                   </button>
-                  <div className="flex min-w-0 max-w-full items-center gap-3 rounded-full border border-white/10 bg-white/4 px-3 py-2">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#a78bfa,#f0abfc)] text-sm font-semibold text-[#140f24]">
-                      MC
-                    </div>
-                    <div className="min-w-0 pr-1">
-                      <p className="truncate text-sm font-semibold text-white">KML Ops</p>
-                      <p className="truncate text-xs text-slate-400">Realtime dashboard</p>
-                    </div>
-                  </div>
+                  <TopbarIdentity />
                 </div>
               </div>
             </div>
