@@ -96,6 +96,12 @@ export function MinecraftDashboard({
                   >
                     Open admin setup guide
                   </Link>
+                  <Link
+                    href="/status"
+                    className="inline-flex items-center rounded-full border border-emerald-300/35 bg-emerald-300/12 px-4 py-2 text-sm font-semibold text-emerald-50 transition hover:bg-emerald-300/18"
+                  >
+                    Open status page
+                  </Link>
                   <a
                     href="#plugin-payload"
                     className="inline-flex items-center rounded-full border border-white/12 bg-white/6 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:bg-white/10"

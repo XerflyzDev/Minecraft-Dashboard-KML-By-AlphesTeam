@@ -28,6 +28,7 @@ Open:
 
 - `/` for the live dashboard
 - `/admin` for the token and plugin setup guide
+- `/status` for health and freshness checks
 
 ## Environment
 

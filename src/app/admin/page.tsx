@@ -56,6 +56,12 @@ export default function AdminPage() {
             >
               Back to dashboard
             </Link>
+            <Link
+              href="/status"
+              className="inline-flex items-center rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm font-semibold text-cyan-50 transition hover:bg-cyan-300/16"
+            >
+              Open status page
+            </Link>
           </div>
         </section>
 
