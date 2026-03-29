@@ -1,0 +1,6 @@
+dashboard:
+  enabled: true
+  endpoint: "http://localhost:3000/api/minecraft/snapshot"
+  bearerToken: "change-me"
+  serverName: "My Minecraft Server"
+  intervalTicks: 20
