@@ -55,8 +55,8 @@ export function DashboardShell({
   const authConfigured = isDiscordAuthConfigured();
 
   return (
-    <main className="min-h-screen px-2 py-2 text-white sm:px-4 lg:px-5">
-      <div className="mx-auto grid min-h-[calc(100vh-1rem)] w-full max-w-[1800px] overflow-hidden rounded-[2.25rem] border border-white/10 bg-[#0a0813]/95 shadow-[0_30px_120px_rgba(0,0,0,0.45)] lg:grid-cols-[296px_1fr]">
+    <main className="min-h-screen text-white">
+      <div className="grid min-h-screen w-full overflow-hidden bg-[#0a0813]/95 lg:grid-cols-[296px_1fr]">
         <aside className="border-b border-white/8 bg-[linear-gradient(180deg,rgba(13,10,24,0.98),rgba(9,8,18,0.98))] p-6 lg:border-b-0 lg:border-r">
           <div className="relative h-[46px] w-full max-w-[210px]">
             <Image

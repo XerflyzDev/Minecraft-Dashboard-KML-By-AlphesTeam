@@ -37,14 +37,30 @@ export function SidebarDiscordButton({
 
   if (!authConfigured) {
     return (
-      <div className="mt-6 rounded-[1.55rem] border border-amber-300/16 bg-amber-400/8 px-4 py-4">
-        <p className="text-[10px] uppercase tracking-[0.22em] text-amber-100/75">
-          Discord access
-        </p>
-        <p className="mt-2 text-sm font-semibold text-white">Not configured yet</p>
-        <p className="mt-2 text-sm leading-6 text-slate-300">
-          Add Discord env vars in Vercel to enable operator sign-in.
-        </p>
+      <div className="mt-6">
+        <button
+          disabled
+          className="flex w-full items-center gap-3 rounded-[1.2rem] border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.84),rgba(218,210,255,0.78))] px-4 py-3.5 text-left opacity-85"
+        >
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#5865F2] text-white shadow-[0_8px_18px_rgba(88,101,242,0.35)]">
+            <DiscordMark />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold text-[#23263a]">
+              Continue with Discord
+            </p>
+          </div>
+          <LogIn className="h-4 w-4 shrink-0 text-[#4d536d]" />
+        </button>
+        <div className="mt-3 rounded-[1.55rem] border border-amber-300/16 bg-amber-400/8 px-4 py-4">
+          <p className="text-[10px] uppercase tracking-[0.22em] text-amber-100/75">
+            Discord access
+          </p>
+          <p className="mt-2 text-sm font-semibold text-white">Not configured yet</p>
+          <p className="mt-2 text-sm leading-6 text-slate-300">
+            Add Discord env vars in Vercel to enable operator sign-in.
+          </p>
+        </div>
       </div>
     );
   }
