@@ -30,6 +30,8 @@ Open:
 - `/admin` for the token and plugin setup guide
 - `/status` for health and freshness checks
 
+The dashboard now starts in an idle state until the first real Paper snapshot is posted.
+
 ## Environment
 
 Create `.env.local` from `.env.example` if you want the POST endpoint to require a shared bearer token.

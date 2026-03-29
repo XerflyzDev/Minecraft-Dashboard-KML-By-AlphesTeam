@@ -3,7 +3,7 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
 import { startTransition, useEffect, useState } from "react";
-import { CloudRain, Flame, Gauge, MapPin, ShieldCheck, Sun, Users, Zap } from "lucide-react";
+import { ChevronDown, CloudRain, Flame, Gauge, MapPin, ShieldCheck, Sun, Users, Zap } from "lucide-react";
 
 import { DashboardShell, DashboardTable, HighlightPanel } from "@/components/dashboard-shell";
 import type { PlayerSnapshot, ServerSnapshot } from "@/lib/minecraft-types";
@@ -38,10 +38,13 @@ function formatPosition(position: PlayerSnapshot["position"]) {
 
 export function MinecraftDashboard({
   initialSnapshot,
+  initialHasReceivedSnapshot,
 }: {
   initialSnapshot: ServerSnapshot;
+  initialHasReceivedSnapshot: boolean;
 }) {
   const [snapshot, setSnapshot] = useState(initialSnapshot);
+  const [hasReceivedSnapshot, setHasReceivedSnapshot] = useState(initialHasReceivedSnapshot);
 
   useEffect(() => {
     const eventSource = new EventSource("/api/minecraft/live");
@@ -51,6 +54,7 @@ export function MinecraftDashboard({
         const nextSnapshot = JSON.parse(event.data) as ServerSnapshot;
         startTransition(() => {
           setSnapshot(nextSnapshot);
+          setHasReceivedSnapshot(true);
         });
       } catch {
         // Ignore malformed events and keep the last valid snapshot.
@@ -75,9 +79,25 @@ export function MinecraftDashboard({
       subtitle="Track world time, weather, live players, biome transitions, and server health in a calmer, wider layout designed to reduce crowding and improve scannability."
     >
       <div className="grid gap-6 xl:gap-7">
+        {!hasReceivedSnapshot ? (
+          <section className="rounded-[1.9rem] border border-amber-300/18 bg-amber-400/8 px-5 py-4 text-sm leading-7 text-amber-50">
+            The dashboard is ready, but no live snapshot has been posted yet. Start the Paper plugin or send a test
+            payload to <span className="font-mono">/api/minecraft/snapshot</span> and this page will switch from idle
+            to live automatically.
+          </section>
+        ) : null}
+
         <HighlightPanel
-          title={`${snapshot.serverName} is synced and streaming live`}
-          description="This main board is fed by the Paper bridge and instantly refreshed through the live snapshot stream. Every player card below uses our own server payload and not mock content from the style reference."
+          title={
+            hasReceivedSnapshot
+              ? `${snapshot.serverName} is synced and streaming live`
+              : "Waiting for the first live snapshot from Paper"
+          }
+          description={
+            hasReceivedSnapshot
+              ? "This main board is fed by the Paper bridge and instantly refreshed through the live snapshot stream. Every player card below uses our own server payload and not mock content from the style reference."
+              : "The web app is running correctly. Once the Paper bridge sends its first snapshot, world time, weather, players, biome transitions, and status pages will all populate with your real server data."
+          }
           cta="Admin setup guide"
           meta={
             <div className="grid gap-4 sm:grid-cols-2">
@@ -127,56 +147,17 @@ export function MinecraftDashboard({
           </section>
         </div>
 
-        <div className="grid gap-6 2xl:grid-cols-[1.22fr_0.78fr]">
+        <div className="grid gap-6 2xl:grid-cols-[1.28fr_0.72fr]">
           <DashboardTable title="Online players">
-            <div className="overflow-hidden rounded-[1.5rem] border border-white/8 bg-[#0f0c19]">
-              <div className="hidden grid-cols-[1.45fr_0.9fr_1.15fr_0.9fr] gap-4 border-b border-white/8 px-5 py-4 text-[11px] uppercase tracking-[0.22em] text-slate-500 lg:grid">
-                <span>Player</span>
-                <span>World</span>
-                <span>Position</span>
-                <span>Vitals</span>
-              </div>
-              <div className="divide-y divide-white/6">
-                {snapshot.players.map((player) => (
-                  <div
-                    key={player.uuid}
-                    className="grid grid-cols-1 gap-5 px-5 py-5 lg:grid-cols-[1.45fr_0.9fr_1.15fr_0.9fr]"
-                  >
-                    <div className="flex items-center gap-3">
-                      <Image
-                        src={`https://mc-heads.net/avatar/${player.uuid}/96`}
-                        alt={`${player.name} avatar`}
-                        width={56}
-                        height={56}
-                        className="h-14 w-14 rounded-2xl border border-white/10 bg-[#171326]"
-                      />
-                      <div>
-                        <p className="font-semibold text-white">{player.name}</p>
-                        <p className="mt-1 text-xs text-slate-500">{player.uuid}</p>
-                        <p className="mt-1 text-xs uppercase tracking-[0.18em] text-slate-400">{player.facing}</p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2.5">
-                      <span className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${worldTone[player.world]}`}>
-                        {worldLabel[player.world]}
-                      </span>
-                      <p className="text-sm text-slate-300">{player.biome}</p>
-                    </div>
-
-                    <div className="space-y-2.5">
-                      <p className="font-mono text-sm text-white">{formatPosition(player.position)}</p>
-                      <p className="text-xs uppercase tracking-[0.18em] text-slate-500">x  y  z</p>
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-3">
-                      <VitalBadge label="HP" value={`${player.health}/20`} />
-                      <VitalBadge label="Food" value={`${player.food}/20`} />
-                      <VitalBadge label="Ping" value={`${player.ping}`} />
-                    </div>
-                  </div>
-                ))}
-              </div>
+            <div className="grid gap-4">
+              {snapshot.players.map((player) => (
+                <PlayerCard key={player.uuid} player={player} />
+              ))}
+              {!snapshot.players.length ? (
+                <div className="rounded-[1.6rem] border border-dashed border-white/12 bg-[#100c19] px-5 py-8 text-center text-sm leading-7 text-slate-400">
+                  No online players in the latest snapshot yet.
+                </div>
+              ) : null}
             </div>
           </DashboardTable>
 
@@ -281,9 +262,9 @@ function InlineStat({ label, value }: { label: string; value: string }) {
 
 function VitalBadge({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-white/8 bg-[#161122] px-3 py-3 text-center">
+    <div className="rounded-[1.3rem] border border-white/8 bg-[#161122] px-3 py-3.5 text-center">
       <p className="text-[10px] uppercase tracking-[0.18em] text-slate-500">{label}</p>
-      <p className="mt-1 text-sm font-semibold text-white">{value}</p>
+      <p className="mt-2 text-sm font-semibold text-white">{value}</p>
     </div>
   );
 }
@@ -292,6 +273,79 @@ function NoteItem({ text }: { text: string }) {
   return (
     <div className="rounded-2xl border border-white/8 bg-[#100c19] px-4 py-4 text-sm leading-7 text-slate-300">
       {text}
+    </div>
+  );
+}
+
+function PlayerCard({ player }: { player: PlayerSnapshot }) {
+  return (
+    <details className="group overflow-hidden rounded-[1.6rem] border border-white/8 bg-[#100c19] open:border-violet-300/18 open:bg-[#130f21]">
+      <summary className="list-none cursor-pointer px-5 py-5">
+        <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
+          <div className="flex min-w-0 items-center gap-4">
+            <Image
+              src={`https://mc-heads.net/avatar/${player.uuid}/96`}
+              alt={`${player.name} avatar`}
+              width={60}
+              height={60}
+              className="h-[60px] w-[60px] shrink-0 rounded-2xl border border-white/10 bg-[#171326]"
+            />
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-3">
+                <p className="text-lg font-semibold text-white">{player.name}</p>
+                <span
+                  className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${worldTone[player.world]}`}
+                >
+                  {worldLabel[player.world]}
+                </span>
+              </div>
+              <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-400">
+                <span>{player.biome}</span>
+                <span className="uppercase tracking-[0.18em]">{player.facing}</span>
+                <span className="font-mono text-slate-300">{formatPosition(player.position)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+            <div className="grid grid-cols-3 gap-3">
+              <VitalBadge label="HP" value={`${player.health}/20`} />
+              <VitalBadge label="Food" value={`${player.food}/20`} />
+              <VitalBadge label="Ping" value={`${player.ping}ms`} />
+            </div>
+
+            <div className="flex items-center gap-2 rounded-full border border-white/8 bg-white/4 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">
+              <span>Details</span>
+              <ChevronDown className="h-4 w-4 transition group-open:rotate-180" />
+            </div>
+          </div>
+        </div>
+      </summary>
+
+      <div className="border-t border-white/6 px-5 py-4">
+        <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr_0.9fr]">
+          <ExpandTile label="UUID" value={player.uuid} mono />
+          <ExpandTile label="Position x y z" value={formatPosition(player.position)} mono />
+          <ExpandTile label="Biome and world" value={`${player.biome} | ${worldLabel[player.world]}`} />
+        </div>
+      </div>
+    </details>
+  );
+}
+
+function ExpandTile({
+  label,
+  value,
+  mono = false,
+}: {
+  label: string;
+  value: string;
+  mono?: boolean;
+}) {
+  return (
+    <div className="rounded-[1.3rem] border border-white/8 bg-[#171226] px-4 py-3">
+      <p className="text-[10px] uppercase tracking-[0.18em] text-slate-500">{label}</p>
+      <p className={`mt-2 text-sm text-white ${mono ? "break-all font-mono" : "font-semibold"}`}>{value}</p>
     </div>
   );
 }

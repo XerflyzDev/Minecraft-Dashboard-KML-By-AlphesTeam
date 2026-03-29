@@ -1,6 +1,13 @@
 import { MinecraftDashboard } from "@/components/minecraft-dashboard";
-import { mockSnapshot } from "@/lib/minecraft-mock";
+import { getDashboardState } from "@/lib/minecraft-store";
 
 export default function Home() {
-  return <MinecraftDashboard initialSnapshot={mockSnapshot} />;
+  const state = getDashboardState();
+
+  return (
+    <MinecraftDashboard
+      initialSnapshot={state.snapshot}
+      initialHasReceivedSnapshot={state.hasReceivedSnapshot}
+    />
+  );
 }

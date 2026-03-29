@@ -125,29 +125,29 @@ export function DashboardShell({
                 <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-400 sm:text-[15px]">{subtitle}</p>
               </div>
 
-              <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-                <div className="flex min-w-[280px] items-center gap-3 rounded-full border border-white/10 bg-white/4 px-5 py-3 text-sm text-slate-400 xl:min-w-[360px]">
+              <div className="flex flex-wrap items-center justify-start gap-3 2xl:justify-end">
+                <div className="flex min-w-0 flex-1 items-center gap-3 rounded-full border border-white/10 bg-white/4 px-5 py-3 text-sm text-slate-400 sm:min-w-[220px] xl:max-w-[360px]">
                   <Search className="h-4 w-4" />
-                  <span>Server snapshots, players, routes</span>
+                  <span className="truncate">Server snapshots, players, routes</span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/4 px-4 py-3 text-sm text-slate-300 xl:flex">
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/4 px-4 py-3 text-sm text-slate-300">
                     <Radio className="h-4 w-4 text-emerald-300" />
-                    <span>Live stream active</span>
+                    <span className="whitespace-nowrap">Live stream active</span>
                   </div>
                   <button
                     aria-label="Notifications"
-                    className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/4 text-slate-200"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/4 text-slate-200"
                   >
                     <Bell className="h-4 w-4" />
                   </button>
-                  <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/4 px-3 py-2">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[linear-gradient(135deg,#a78bfa,#f0abfc)] text-sm font-semibold text-[#140f24]">
+                  <div className="flex min-w-0 max-w-full items-center gap-3 rounded-full border border-white/10 bg-white/4 px-3 py-2">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#a78bfa,#f0abfc)] text-sm font-semibold text-[#140f24]">
                       MC
                     </div>
-                    <div className="pr-1">
-                      <p className="text-sm font-semibold text-white">KML Ops</p>
-                      <p className="text-xs text-slate-400">Realtime dashboard</p>
+                    <div className="min-w-0 pr-1">
+                      <p className="truncate text-sm font-semibold text-white">KML Ops</p>
+                      <p className="truncate text-xs text-slate-400">Realtime dashboard</p>
                     </div>
                   </div>
                 </div>

@@ -45,6 +45,8 @@ export default function StatusPage() {
               <StatusMetric label="Snapshot age" value={formatAge(health.snapshotAgeSeconds)} tone={tone} />
               <StatusMetric label="Last update" value={health.lastUpdateAt ? new Date(health.lastUpdateAt).toLocaleString("en-GB") : "None"} tone={tone} />
               <StatusMetric label="Players online" value={`${health.onlinePlayers}`} tone={tone} />
+              <StatusMetric label="POST count" value={`${health.postCount}`} tone={tone} />
+              <StatusMetric label="Last POST" value={health.lastPostAt ? new Date(health.lastPostAt).toLocaleString("en-GB") : "None"} tone={tone} />
             </div>
           }
         />
@@ -82,7 +84,7 @@ export default function StatusPage() {
             <div className="mt-4 space-y-3">
               <NoteItem text="LIVE means the newest snapshot is not older than 15 seconds." />
               <NoteItem text="STALE usually means the Paper plugin stopped posting, the endpoint is wrong, or the token is mismatched." />
-              <NoteItem text="IDLE means the stored timestamp is missing or invalid." />
+              <NoteItem text="IDLE means the dashboard has not received a real snapshot from the Paper bridge yet." />
               <NoteItem text="If status is live but the homepage does not update, inspect the SSE route and browser connection first." />
             </div>
           </section>
