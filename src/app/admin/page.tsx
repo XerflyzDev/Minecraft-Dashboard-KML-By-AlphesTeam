@@ -50,13 +50,13 @@ export default function AdminPage() {
       title="Bridge setup guide for token, endpoint, and first sync"
       subtitle="Use this page to wire the Next.js dashboard and the Paper plugin together without guessing which token, route, or verification step comes next."
     >
-      <div className="grid gap-5">
+      <div className="grid gap-6 xl:gap-7">
         <HighlightPanel
           title="Bring the Paper bridge online with one shared token"
           description="The visual style follows the new dark dashboard system, but the steps here are specific to this Minecraft project. Use the same bearer token on both the web app and the plugin, then verify delivery through the status route."
           cta="Use same token on both sides"
           meta={
-            <div className="grid gap-3">
+            <div className="grid gap-4">
               <AdminMetric label="Write endpoint" value="/api/minecraft/snapshot" />
               <AdminMetric label="Live endpoint" value="/api/minecraft/live" />
               <AdminMetric label="Health endpoint" value="/api/minecraft/status" />
@@ -64,28 +64,28 @@ export default function AdminPage() {
           }
         />
 
-        <div className="grid gap-5 xl:grid-cols-[1.05fr_0.95fr]">
-          <section className="rounded-[1.9rem] border border-white/10 bg-[#110d1d]/92 p-5">
+        <div className="grid gap-6 2xl:grid-cols-[1fr_1fr]">
+          <section className="rounded-[1.9rem] border border-white/10 bg-[#110d1d]/92 p-6">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Token</p>
             <h2 className="mt-2 text-2xl font-semibold text-white">Dashboard env value</h2>
             <CodeBlock code={envExample} />
           </section>
 
-          <section className="rounded-[1.9rem] border border-white/10 bg-[#110d1d]/92 p-5">
+          <section className="rounded-[1.9rem] border border-white/10 bg-[#110d1d]/92 p-6">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Plugin config</p>
             <h2 className="mt-2 text-2xl font-semibold text-white">Paper bridge settings</h2>
             <CodeBlock code={pluginConfig} />
           </section>
         </div>
 
-        <div className="grid gap-5 xl:grid-cols-[1.05fr_0.95fr]">
-          <section className="rounded-[1.9rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-5">
+        <div className="grid gap-6 2xl:grid-cols-[1fr_1fr]">
+          <section className="rounded-[1.9rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Manual test</p>
             <h2 className="mt-2 text-2xl font-semibold text-white">POST one snapshot before launching the plugin</h2>
             <CodeBlock code={curlExample} />
           </section>
 
-          <section className="rounded-[1.9rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-5">
+          <section className="rounded-[1.9rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Checklist</p>
             <h2 className="mt-2 text-2xl font-semibold text-white">What to verify</h2>
             <div className="mt-4 space-y-3">
@@ -96,7 +96,7 @@ export default function AdminPage() {
           </section>
         </div>
 
-        <section className="rounded-[1.9rem] border border-white/10 bg-[#110d1d]/92 p-5">
+        <section className="rounded-[1.9rem] border border-white/10 bg-[#110d1d]/92 p-6">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Reference paths</p>
           <h2 className="mt-2 text-2xl font-semibold text-white">Files you will touch most often</h2>
           <div className="mt-4 grid gap-3 md:grid-cols-2">
@@ -112,7 +112,7 @@ export default function AdminPage() {
 
 function CodeBlock({ code }: { code: string }) {
   return (
-    <pre className="mt-4 overflow-x-auto rounded-[1.4rem] border border-white/8 bg-black/25 p-4 text-xs leading-6 text-violet-100">
+    <pre className="mt-4 overflow-x-auto rounded-[1.5rem] border border-white/8 bg-black/25 p-5 text-xs leading-7 text-violet-100">
       {code}
     </pre>
   );
@@ -120,7 +120,7 @@ function CodeBlock({ code }: { code: string }) {
 
 function AdminMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[1.4rem] border border-white/8 bg-[#110d1d]/88 px-4 py-3">
+    <div className="rounded-[1.5rem] border border-white/8 bg-[#110d1d]/88 px-4 py-4">
       <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">{label}</p>
       <p className="mt-2 font-mono text-sm text-white">{value}</p>
     </div>
@@ -129,7 +129,7 @@ function AdminMetric({ label, value }: { label: string; value: string }) {
 
 function ChecklistItem({ text }: { text: string }) {
   return (
-    <div className="rounded-[1.4rem] border border-white/8 bg-[#100c19] px-4 py-3 text-sm leading-7 text-slate-300">
+    <div className="rounded-[1.5rem] border border-white/8 bg-[#100c19] px-4 py-4 text-sm leading-7 text-slate-300">
       {text}
     </div>
   );
@@ -143,7 +143,7 @@ function PathCard({
   description: string;
 }) {
   return (
-    <div className="rounded-[1.4rem] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] px-4 py-3">
+    <div className="rounded-[1.5rem] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] px-4 py-4">
       <p className="font-mono text-sm text-white">{path}</p>
       <p className="mt-2 text-sm leading-6 text-slate-400">{description}</p>
     </div>

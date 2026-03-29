@@ -72,15 +72,15 @@ export function MinecraftDashboard({
       active="dashboard"
       eyebrow="Realtime overview"
       title="Minecraft control room for live world telemetry"
-      subtitle="Track world time, weather, live players, biome transitions, and server health in one dark, focused ops dashboard."
+      subtitle="Track world time, weather, live players, biome transitions, and server health in a calmer, wider layout designed to reduce crowding and improve scannability."
     >
-      <div className="grid gap-5">
+      <div className="grid gap-6 xl:gap-7">
         <HighlightPanel
           title={`${snapshot.serverName} is synced and streaming live`}
           description="This main board is fed by the Paper bridge and instantly refreshed through the live snapshot stream. Every player card below uses our own server payload and not mock content from the style reference."
           cta="Admin setup guide"
           meta={
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-2">
               <MetaCard icon={<Sun className="h-4 w-4" />} label="World day" value={`Day ${snapshot.day}`} hint={`Clock ${snapshot.time}`} />
               <MetaCard
                 icon={<WeatherIcon className="h-4 w-4" />}
@@ -94,8 +94,8 @@ export function MinecraftDashboard({
           }
         />
 
-        <div className="grid gap-5 xl:grid-cols-[1.25fr_0.75fr]">
-          <div className="grid gap-5 md:grid-cols-3">
+        <div className="grid gap-6 2xl:grid-cols-[1.3fr_0.7fr]">
+          <div className="grid gap-6 lg:grid-cols-2 2xl:grid-cols-3">
             <FeatureCard
               icon={<MapPin className="h-5 w-5" />}
               title="Player coordinates"
@@ -116,9 +116,9 @@ export function MinecraftDashboard({
             />
           </div>
 
-          <section className="rounded-[1.9rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-5">
+          <section className="rounded-[1.9rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Live snapshot</p>
-            <div className="mt-4 grid gap-3">
+            <div className="mt-4 grid gap-4">
               <InlineStat label="Updated" value={new Date(snapshot.updatedAt).toLocaleString("en-GB")} />
               <InlineStat label="Live stream" value="/api/minecraft/live" />
               <InlineStat label="Snapshot route" value="/api/minecraft/snapshot" />
@@ -127,10 +127,10 @@ export function MinecraftDashboard({
           </section>
         </div>
 
-        <div className="grid gap-5 xl:grid-cols-[1.18fr_0.82fr]">
+        <div className="grid gap-6 2xl:grid-cols-[1.22fr_0.78fr]">
           <DashboardTable title="Online players">
             <div className="overflow-hidden rounded-[1.5rem] border border-white/8 bg-[#0f0c19]">
-              <div className="grid grid-cols-[1.4fr_0.9fr_1.2fr_0.9fr] gap-3 border-b border-white/8 px-4 py-3 text-[11px] uppercase tracking-[0.22em] text-slate-500">
+              <div className="hidden grid-cols-[1.45fr_0.9fr_1.15fr_0.9fr] gap-4 border-b border-white/8 px-5 py-4 text-[11px] uppercase tracking-[0.22em] text-slate-500 lg:grid">
                 <span>Player</span>
                 <span>World</span>
                 <span>Position</span>
@@ -140,7 +140,7 @@ export function MinecraftDashboard({
                 {snapshot.players.map((player) => (
                   <div
                     key={player.uuid}
-                    className="grid grid-cols-1 gap-4 px-4 py-4 md:grid-cols-[1.4fr_0.9fr_1.2fr_0.9fr]"
+                    className="grid grid-cols-1 gap-5 px-5 py-5 lg:grid-cols-[1.45fr_0.9fr_1.15fr_0.9fr]"
                   >
                     <div className="flex items-center gap-3">
                       <Image
@@ -157,19 +157,19 @@ export function MinecraftDashboard({
                       </div>
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="space-y-2.5">
                       <span className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${worldTone[player.world]}`}>
                         {worldLabel[player.world]}
                       </span>
                       <p className="text-sm text-slate-300">{player.biome}</p>
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="space-y-2.5">
                       <p className="font-mono text-sm text-white">{formatPosition(player.position)}</p>
                       <p className="text-xs uppercase tracking-[0.18em] text-slate-500">x  y  z</p>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-2">
+                    <div className="grid grid-cols-3 gap-3">
                       <VitalBadge label="HP" value={`${player.health}/20`} />
                       <VitalBadge label="Food" value={`${player.food}/20`} />
                       <VitalBadge label="Ping" value={`${player.ping}`} />
@@ -180,8 +180,8 @@ export function MinecraftDashboard({
             </div>
           </DashboardTable>
 
-          <section className="grid gap-5">
-            <div className="rounded-[1.9rem] border border-white/10 bg-[#110d1d]/92 p-5">
+          <section className="grid gap-6">
+            <div className="rounded-[1.9rem] border border-white/10 bg-[#110d1d]/92 p-6">
               <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Snapshot contract</p>
               <h2 className="mt-2 text-2xl font-semibold text-white">Payload fields used by this UI</h2>
               <pre className="mt-4 overflow-x-auto rounded-[1.5rem] border border-white/8 bg-black/25 p-4 text-xs leading-6 text-violet-100">
@@ -207,9 +207,9 @@ players[].ping`}
               </pre>
             </div>
 
-            <div className="rounded-[1.9rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-5">
+            <div className="rounded-[1.9rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6">
               <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Ops notes</p>
-              <div className="mt-4 space-y-3">
+              <div className="mt-4 space-y-4">
                 <NoteItem text="Status page flags stale data when the newest snapshot is older than 15 seconds." />
                 <NoteItem text="Admin page keeps the token, endpoint, and live stream bring-up steps in one place." />
                 <NoteItem text="Paper bridge now supports immediate event pushes plus a retry queue." />
@@ -234,7 +234,7 @@ function MetaCard({
   hint: string;
 }) {
   return (
-    <div className="rounded-[1.4rem] border border-white/8 bg-[#110d1d]/88 p-4">
+    <div className="rounded-[1.5rem] border border-white/8 bg-[#110d1d]/88 p-5">
       <div className="flex items-center gap-2 text-violet-200">
         {icon}
         <span className="text-xs uppercase tracking-[0.22em] text-slate-500">{label}</span>
@@ -257,7 +257,7 @@ function FeatureCard({
   badge: string;
 }) {
   return (
-    <section className="rounded-[1.9rem] border border-white/10 bg-[radial-gradient(circle_at_bottom_right,rgba(167,139,250,0.18),transparent_24%),linear-gradient(180deg,rgba(18,14,31,0.96),rgba(11,9,20,0.98))] p-5">
+    <section className="rounded-[1.9rem] border border-white/10 bg-[radial-gradient(circle_at_bottom_right,rgba(167,139,250,0.18),transparent_24%),linear-gradient(180deg,rgba(18,14,31,0.96),rgba(11,9,20,0.98))] p-6">
       <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#c4b5fd,#8b5cf6)] text-[#140f24]">
         {icon}
       </div>
@@ -272,7 +272,7 @@ function FeatureCard({
 
 function InlineStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-white/8 bg-[#100c19] px-4 py-3">
+    <div className="rounded-2xl border border-white/8 bg-[#100c19] px-4 py-4">
       <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">{label}</p>
       <p className="mt-2 text-sm font-semibold text-white">{value}</p>
     </div>
@@ -281,7 +281,7 @@ function InlineStat({ label, value }: { label: string; value: string }) {
 
 function VitalBadge({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-white/8 bg-[#161122] px-3 py-2 text-center">
+    <div className="rounded-2xl border border-white/8 bg-[#161122] px-3 py-3 text-center">
       <p className="text-[10px] uppercase tracking-[0.18em] text-slate-500">{label}</p>
       <p className="mt-1 text-sm font-semibold text-white">{value}</p>
     </div>
@@ -290,7 +290,7 @@ function VitalBadge({ label, value }: { label: string; value: string }) {
 
 function NoteItem({ text }: { text: string }) {
   return (
-    <div className="rounded-2xl border border-white/8 bg-[#100c19] px-4 py-3 text-sm leading-7 text-slate-300">
+    <div className="rounded-2xl border border-white/8 bg-[#100c19] px-4 py-4 text-sm leading-7 text-slate-300">
       {text}
     </div>
   );

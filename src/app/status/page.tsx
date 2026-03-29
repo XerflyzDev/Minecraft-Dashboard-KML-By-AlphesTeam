@@ -34,13 +34,13 @@ export default function StatusPage() {
       title="Status board for freshness, endpoints, and current server values"
       subtitle="This screen is the quick diagnostic layer for the dashboard. It shows whether the newest snapshot is live, stale, or idle, and which routes should be checked next."
     >
-      <div className="grid gap-5">
+      <div className="grid gap-6 xl:gap-7">
         <HighlightPanel
           title={`${health.serverName} is currently ${health.status}`}
           description="This page turns the latest stored snapshot into a health summary. If the age grows too high, the status flips to stale and the admin guide becomes your next stop."
           cta="Check admin guide"
           meta={
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-2">
               <StatusMetric label="Health" value={health.status.toUpperCase()} tone={tone} />
               <StatusMetric label="Snapshot age" value={formatAge(health.snapshotAgeSeconds)} tone={tone} />
               <StatusMetric label="Last update" value={health.lastUpdateAt ? new Date(health.lastUpdateAt).toLocaleString("en-GB") : "None"} tone={tone} />
@@ -49,8 +49,8 @@ export default function StatusPage() {
           }
         />
 
-        <div className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
-          <section className="rounded-[1.9rem] border border-white/10 bg-[#110d1d]/92 p-5">
+        <div className="grid gap-6 2xl:grid-cols-[0.92fr_1.08fr]">
+          <section className="rounded-[1.9rem] border border-white/10 bg-[#110d1d]/92 p-6">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Health targets</p>
             <h2 className="mt-2 text-2xl font-semibold text-white">Routes to inspect</h2>
             <div className="mt-4 space-y-3">
@@ -61,7 +61,7 @@ export default function StatusPage() {
             </div>
           </section>
 
-          <section className="rounded-[1.9rem] border border-white/10 bg-[#110d1d]/92 p-5">
+          <section className="rounded-[1.9rem] border border-white/10 bg-[#110d1d]/92 p-6">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Snapshot values</p>
             <h2 className="mt-2 text-2xl font-semibold text-white">Current server state</h2>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -75,8 +75,8 @@ export default function StatusPage() {
           </section>
         </div>
 
-        <div className="grid gap-5 xl:grid-cols-[1.02fr_0.98fr]">
-          <section className="rounded-[1.9rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-5">
+        <div className="grid gap-6 2xl:grid-cols-[1fr_1fr]">
+          <section className="rounded-[1.9rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Diagnosis notes</p>
             <h2 className="mt-2 text-2xl font-semibold text-white">What each state means</h2>
             <div className="mt-4 space-y-3">
@@ -90,9 +90,9 @@ export default function StatusPage() {
           <DashboardTable title="Latest player coordinates">
             <div className="space-y-3">
               {snapshot.players.map((player) => (
-                <div
+              <div
                   key={player.uuid}
-                  className="grid gap-3 rounded-[1.4rem] border border-white/8 bg-[#100c19] px-4 py-3 md:grid-cols-[1fr_0.9fr_1fr]"
+                  className="grid gap-4 rounded-[1.5rem] border border-white/8 bg-[#100c19] px-4 py-4 md:grid-cols-[1fr_0.9fr_1fr]"
                 >
                   <div>
                     <p className="font-semibold text-white">{player.name}</p>
@@ -128,7 +128,7 @@ function StatusMetric({
   tone: string;
 }) {
   return (
-    <div className={`rounded-[1.4rem] border px-4 py-3 ${tone}`}>
+    <div className={`rounded-[1.5rem] border px-4 py-4 ${tone}`}>
       <p className="text-[10px] uppercase tracking-[0.22em] opacity-70">{label}</p>
       <p className="mt-2 text-sm font-semibold">{value}</p>
     </div>
@@ -137,7 +137,7 @@ function StatusMetric({
 
 function RouteCard({ path, description }: { path: string; description: string }) {
   return (
-    <div className="rounded-[1.4rem] border border-white/8 bg-[#100c19] px-4 py-3">
+    <div className="rounded-[1.5rem] border border-white/8 bg-[#100c19] px-4 py-4">
       <p className="font-mono text-sm text-white">{path}</p>
       <p className="mt-2 text-sm leading-6 text-slate-400">{description}</p>
     </div>
@@ -146,7 +146,7 @@ function RouteCard({ path, description }: { path: string; description: string })
 
 function ValueTile({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[1.4rem] border border-white/8 bg-[#100c19] px-4 py-3">
+    <div className="rounded-[1.5rem] border border-white/8 bg-[#100c19] px-4 py-4">
       <p className="text-[10px] uppercase tracking-[0.18em] text-slate-500">{label}</p>
       <p className="mt-2 text-sm font-semibold text-white">{value}</p>
     </div>
@@ -155,7 +155,7 @@ function ValueTile({ label, value }: { label: string; value: string }) {
 
 function NoteItem({ text }: { text: string }) {
   return (
-    <div className="rounded-[1.4rem] border border-white/8 bg-[#100c19] px-4 py-3 text-sm leading-7 text-slate-300">
+    <div className="rounded-[1.5rem] border border-white/8 bg-[#100c19] px-4 py-4 text-sm leading-7 text-slate-300">
       {text}
     </div>
   );
