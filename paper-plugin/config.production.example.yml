@@ -2,7 +2,7 @@ dashboard:
   enabled: true
   endpoint: "https://minecraft-dashboard-kml.vercel.app/api/minecraft/snapshot"
   bearerToken: "replace-with-your-minecraft-dashboard-token"
-  serverName: "My Minecraft Server"
+  serverName: "Your Minecraft Server"
   intervalTicks: 20
   retryIntervalTicks: 40
   maxQueueSize: 8

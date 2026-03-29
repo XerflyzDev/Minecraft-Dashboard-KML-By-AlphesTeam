@@ -19,13 +19,39 @@ Edit `src/main/resources/config.yml` before packaging or change the generated pl
 ```yaml
 dashboard:
   enabled: true
-  endpoint: "http://localhost:3000/api/minecraft/snapshot"
-  bearerToken: "change-me"
+  endpoint: "https://minecraft-dashboard-kml.vercel.app/api/minecraft/snapshot"
+  bearerToken: "replace-with-your-minecraft-dashboard-token"
   serverName: "My Minecraft Server"
   intervalTicks: 20
   retryIntervalTicks: 40
   maxQueueSize: 8
 ```
+
+For a ready-to-copy production template, use:
+
+`paper-plugin/config.production.example.yml`
+
+## Install On Paper
+
+1. Build the jar with `mvn package`.
+2. Copy `paper-plugin/target/minecraft-dashboard-bridge-0.1.0.jar` into your Paper server `plugins` folder.
+3. Start the server once so Paper creates the plugin data folder.
+4. Open the generated plugin config and confirm:
+   - `dashboard.endpoint` points to `https://minecraft-dashboard-kml.vercel.app/api/minecraft/snapshot`
+   - `dashboard.bearerToken` matches `MINECRAFT_DASHBOARD_TOKEN` on the website
+   - `dashboard.serverName` is your real server name
+5. Restart the server.
+
+## Expected Result
+
+After the plugin starts successfully, the website should begin showing real data such as:
+
+- in-game day and time
+- weather
+- online player count
+- player positions
+- world and biome
+- bridge delivery metrics on `/status`
 
 ## Runtime notes
 
