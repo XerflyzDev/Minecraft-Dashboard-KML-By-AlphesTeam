@@ -20,6 +20,7 @@ const checklist = [
   "Point the plugin endpoint to /api/minecraft/snapshot on your dashboard domain.",
   "Keep the bearer token identical on both sides or POST requests will return 401.",
   "Open /api/minecraft/snapshot in the browser to confirm the latest stored snapshot.",
+  "Keep the dashboard page open to verify that /api/minecraft/live updates the UI instantly after each POST.",
 ];
 
 const verifySteps = [
@@ -127,6 +128,10 @@ export default function AdminPage() {
               <PathTile
                 path="src/app/api/minecraft/snapshot/route.ts"
                 description="GET and POST route that stores and returns the latest snapshot."
+              />
+              <PathTile
+                path="src/app/api/minecraft/live/route.ts"
+                description="SSE live stream that pushes new snapshots into the open dashboard page."
               />
               <PathTile
                 path="docs/paper-plugin-api-spec.md"

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { broadcastSnapshot } from "@/lib/minecraft-live";
 import { getSnapshot, setSnapshot } from "@/lib/minecraft-store";
 import { isServerSnapshot } from "@/lib/minecraft-types";
 
@@ -59,6 +60,7 @@ export async function POST(request: Request) {
   }
 
   setSnapshot(payload);
+  broadcastSnapshot(payload);
 
   return NextResponse.json({
     ok: true,

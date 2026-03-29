@@ -27,7 +27,7 @@ Expose one server snapshot that includes:
 1. Paper or Spigot plugin collects live data on a repeating scheduler.
 2. Plugin sends the latest snapshot to the web app over HTTP.
 3. Web app stores the latest snapshot in memory, Redis, SQLite, or a JSON file.
-4. Dashboard page reads the latest snapshot and broadcasts changes through WebSocket if needed.
+4. Dashboard page reads the latest snapshot and streams changes to connected clients.
 
 ## Recommended poll interval
 
@@ -97,15 +97,13 @@ Returns the latest full snapshot.
 
 Returns only the `players` array if the frontend wants a lighter request.
 
-## WebSocket event
+## Live stream endpoint
 
-Endpoint suggestion:
+This project now uses Server-Sent Events for live push updates.
 
-`/ws/minecraft/live`
+Endpoint:
 
-Event suggestion:
-
-`minecraft:snapshot`
+`GET /api/minecraft/live`
 
 Payload is the same JSON structure as the HTTP push body.
 

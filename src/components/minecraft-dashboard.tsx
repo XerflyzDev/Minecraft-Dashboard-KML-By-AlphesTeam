@@ -29,7 +29,7 @@ const weatherTone = {
 const endpointList = [
   "GET /api/minecraft/snapshot",
   "GET /api/minecraft/players",
-  "WS  /ws/minecraft/live",
+  "SSE /api/minecraft/live",
   "POST /api/minecraft/snapshot",
 ];
 
@@ -45,39 +45,24 @@ export function MinecraftDashboard({
   const [snapshot, setSnapshot] = useState(initialSnapshot);
 
   useEffect(() => {
-    let cancelled = false;
+    const eventSource = new EventSource("/api/minecraft/live");
 
-    const syncSnapshot = async () => {
+    const handleSnapshot = (event: MessageEvent<string>) => {
       try {
-        const response = await fetch("/api/minecraft/snapshot", {
-          cache: "no-store",
+        const nextSnapshot = JSON.parse(event.data) as ServerSnapshot;
+        startTransition(() => {
+          setSnapshot(nextSnapshot);
         });
-
-        if (!response.ok) {
-          return;
-        }
-
-        const nextSnapshot = (await response.json()) as ServerSnapshot;
-
-        if (!cancelled) {
-          startTransition(() => {
-            setSnapshot(nextSnapshot);
-          });
-        }
       } catch {
-        // Keep the last known snapshot when the API is temporarily unavailable.
+        // Ignore malformed events and keep the last valid snapshot.
       }
     };
 
-    void syncSnapshot();
-
-    const interval = window.setInterval(() => {
-      void syncSnapshot();
-    }, 2000);
+    eventSource.addEventListener("snapshot", handleSnapshot as EventListener);
 
     return () => {
-      cancelled = true;
-      window.clearInterval(interval);
+      eventSource.removeEventListener("snapshot", handleSnapshot as EventListener);
+      eventSource.close();
     };
   }, []);
 
@@ -150,7 +135,7 @@ export function MinecraftDashboard({
 
                 <div className="rounded-2xl border border-cyan-200/20 bg-cyan-200/8 px-4 py-3 text-right">
                   <p className="text-xs uppercase tracking-[0.2em] text-cyan-100/65">Sync Mode</p>
-                  <p className="mt-1 text-sm font-semibold text-cyan-50">Plugin push + polling</p>
+                  <p className="mt-1 text-sm font-semibold text-cyan-50">Plugin push + live stream</p>
                 </div>
               </div>
 
