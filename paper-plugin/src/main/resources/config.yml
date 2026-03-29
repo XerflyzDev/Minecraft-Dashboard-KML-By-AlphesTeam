@@ -4,3 +4,5 @@ dashboard:
   bearerToken: "change-me"
   serverName: "My Minecraft Server"
   intervalTicks: 20
+  retryIntervalTicks: 40
+  maxQueueSize: 8

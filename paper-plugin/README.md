@@ -23,6 +23,8 @@ dashboard:
   bearerToken: "change-me"
   serverName: "My Minecraft Server"
   intervalTicks: 20
+  retryIntervalTicks: 40
+  maxQueueSize: 8
 ```
 
 ## Runtime notes
@@ -30,3 +32,5 @@ dashboard:
 - Use this with Paper for the best access to TPS and player ping.
 - The HTTP push runs async so it does not block the main server thread.
 - The dashboard accepts a bearer token through `MINECRAFT_DASHBOARD_TOKEN`.
+- Periodic snapshots still run, and important events also trigger immediate pushes.
+- Failed deliveries are retried from a small in-memory queue.

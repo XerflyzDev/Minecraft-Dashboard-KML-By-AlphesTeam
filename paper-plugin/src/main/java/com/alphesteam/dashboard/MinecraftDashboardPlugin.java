@@ -1,5 +1,6 @@
 package com.alphesteam.dashboard;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class MinecraftDashboardPlugin extends JavaPlugin {
@@ -11,6 +12,8 @@ public final class MinecraftDashboardPlugin extends JavaPlugin {
 
         this.publisher = new SnapshotPublisher(this);
         this.publisher.start();
+        Bukkit.getPluginManager().registerEvents(new SnapshotEventListener(publisher), this);
+        this.publisher.requestImmediatePush("plugin-enable");
 
         getLogger().info("MinecraftDashboardBridge enabled.");
     }

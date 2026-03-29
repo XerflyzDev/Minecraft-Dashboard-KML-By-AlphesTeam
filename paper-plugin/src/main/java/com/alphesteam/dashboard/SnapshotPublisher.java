@@ -10,13 +10,20 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.ArrayDeque;
+import java.util.Queue;
 
 public final class SnapshotPublisher {
     private final MinecraftDashboardPlugin plugin;
     private final HttpClient httpClient;
     private final Gson gson;
     private final SnapshotFactory snapshotFactory;
-    private BukkitTask task;
+    private final Queue<QueuedSnapshot> retryQueue;
+    private final long retryIntervalTicks;
+    private final int maxQueueSize;
+    private BukkitTask intervalTask;
+    private BukkitTask retryTask;
+    private volatile boolean pushInFlight;
 
     public SnapshotPublisher(MinecraftDashboardPlugin plugin) {
         this.plugin = plugin;
@@ -25,6 +32,9 @@ public final class SnapshotPublisher {
                 .build();
         this.gson = new Gson();
         this.snapshotFactory = new SnapshotFactory(plugin);
+        this.retryQueue = new ArrayDeque<>();
+        this.retryIntervalTicks = Math.max(20L, plugin.getConfig().getLong("dashboard.retryIntervalTicks", 40L));
+        this.maxQueueSize = Math.max(1, plugin.getConfig().getInt("dashboard.maxQueueSize", 8));
     }
 
     public void start() {
@@ -34,30 +44,81 @@ public final class SnapshotPublisher {
         }
 
         long intervalTicks = Math.max(20L, plugin.getConfig().getLong("dashboard.intervalTicks", 20L));
-        this.task = Bukkit.getScheduler().runTaskTimerAsynchronously(
+        this.intervalTask = Bukkit.getScheduler().runTaskTimerAsynchronously(
                 plugin,
-                this::pushSnapshotSafely,
+                () -> pushFreshSnapshot("interval"),
                 20L,
                 intervalTicks
+        );
+        this.retryTask = Bukkit.getScheduler().runTaskTimerAsynchronously(
+                plugin,
+                this::flushRetryQueue,
+                retryIntervalTicks,
+                retryIntervalTicks
         );
     }
 
     public void stop() {
-        if (task != null) {
-            task.cancel();
-            task = null;
+        if (intervalTask != null) {
+            intervalTask.cancel();
+            intervalTask = null;
+        }
+
+        if (retryTask != null) {
+            retryTask.cancel();
+            retryTask = null;
+        }
+
+        synchronized (retryQueue) {
+            retryQueue.clear();
         }
     }
 
-    private void pushSnapshotSafely() {
+    public void requestImmediatePush(String reason) {
+        if (!plugin.getConfig().getBoolean("dashboard.enabled", true)) {
+            return;
+        }
+
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> pushFreshSnapshot(reason));
+    }
+
+    private void pushFreshSnapshot(String reason) {
+        pushSnapshotSafely(new QueuedSnapshot(snapshotFactory.createSnapshot(), reason, 0));
+    }
+
+    private void flushRetryQueue() {
+        QueuedSnapshot queuedSnapshot;
+
+        synchronized (retryQueue) {
+            queuedSnapshot = retryQueue.poll();
+        }
+
+        if (queuedSnapshot == null) {
+            return;
+        }
+
+        pushSnapshotSafely(queuedSnapshot);
+    }
+
+    private void pushSnapshotSafely(QueuedSnapshot queuedSnapshot) {
+        if (pushInFlight) {
+            enqueueForRetry(queuedSnapshot.nextAttempt("busy"));
+            return;
+        }
+
+        pushInFlight = true;
+
         try {
-            pushSnapshot();
+            pushSnapshot(queuedSnapshot);
         } catch (Exception exception) {
+            enqueueForRetry(queuedSnapshot.nextAttempt("exception"));
             plugin.getLogger().warning("Failed to push dashboard snapshot: " + exception.getMessage());
+        } finally {
+            pushInFlight = false;
         }
     }
 
-    private void pushSnapshot() throws IOException, InterruptedException {
+    private void pushSnapshot(QueuedSnapshot queuedSnapshot) throws IOException, InterruptedException {
         String endpoint = plugin.getConfig().getString("dashboard.endpoint", "").trim();
         if (endpoint.isEmpty()) {
             plugin.getLogger().warning("dashboard.endpoint is empty. Skipping snapshot push.");
@@ -65,7 +126,7 @@ public final class SnapshotPublisher {
         }
 
         String token = plugin.getConfig().getString("dashboard.bearerToken", "");
-        String json = gson.toJson(snapshotFactory.createSnapshot());
+        String json = gson.toJson(queuedSnapshot.snapshot());
 
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
                 .uri(URI.create(endpoint))
@@ -80,9 +141,25 @@ public final class SnapshotPublisher {
         HttpResponse<String> response = httpClient.send(requestBuilder.build(), HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() >= 300) {
+            enqueueForRetry(queuedSnapshot.nextAttempt("http-" + response.statusCode()));
             plugin.getLogger().warning(
-                    "Dashboard endpoint returned HTTP " + response.statusCode() + ": " + response.body()
+                    "Dashboard endpoint returned HTTP " + response.statusCode() + " for " + queuedSnapshot.reason()
             );
+            return;
+        }
+
+        if (queuedSnapshot.attempt() > 0) {
+            plugin.getLogger().info("Retried snapshot delivery succeeded for " + queuedSnapshot.reason() + ".");
+        }
+    }
+
+    private void enqueueForRetry(QueuedSnapshot queuedSnapshot) {
+        synchronized (retryQueue) {
+            while (retryQueue.size() >= maxQueueSize) {
+                retryQueue.poll();
+            }
+
+            retryQueue.offer(queuedSnapshot);
         }
     }
 }

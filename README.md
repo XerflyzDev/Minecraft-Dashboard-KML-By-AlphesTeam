@@ -8,6 +8,7 @@ Realtime Minecraft Java server dashboard built with Next.js.
 - Player cards with avatar, world, biome, xyz, health, food, and ping
 - Paper or Spigot plugin API contract
 - Ready-to-extend layout for snapshot API and WebSocket updates
+- Paper plugin with event-based pushes and retry queue
 
 ## Project structure
 
