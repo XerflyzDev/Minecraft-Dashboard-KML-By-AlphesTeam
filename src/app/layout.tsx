@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { AuthSessionProvider } from "@/components/auth-session-provider";
+import { isDiscordAuthConfigured } from "@/lib/auth-env";
 import { authOptions } from "@/lib/auth-options";
 import "./globals.css";
 
@@ -15,7 +16,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(authOptions);
+  const session = isDiscordAuthConfigured()
+    ? await getServerSession(authOptions)
+    : null;
 
   return (
     <html lang="en" className="h-full antialiased">

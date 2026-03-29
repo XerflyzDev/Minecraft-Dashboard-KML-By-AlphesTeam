@@ -9,8 +9,10 @@ import { authOptions } from "@/lib/auth-options";
 import { LoginButton } from "./sign-in-button";
 
 export default async function LoginPage() {
-  const session = await getServerSession(authOptions);
   const authConfigured = isDiscordAuthConfigured();
+  const session = authConfigured
+    ? await getServerSession(authOptions)
+    : null;
 
   return (
     <DashboardShell
