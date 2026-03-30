@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { broadcastSnapshot } from "@/lib/minecraft-live";
 import { getSnapshot, setSnapshot } from "@/lib/minecraft-store";
-import { isServerSnapshot } from "@/lib/minecraft-types";
+import { normalizeServerSnapshot } from "@/lib/minecraft-types";
 
 function hasValidToken(request: Request) {
   const configuredToken = process.env.MINECRAFT_DASHBOARD_TOKEN;
@@ -49,7 +49,9 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!isServerSnapshot(payload)) {
+  const snapshot = normalizeServerSnapshot(payload);
+
+  if (!snapshot) {
     return NextResponse.json(
       {
         ok: false,
@@ -59,8 +61,8 @@ export async function POST(request: Request) {
     );
   }
 
-  setSnapshot(payload);
-  broadcastSnapshot(payload);
+  setSnapshot(snapshot);
+  broadcastSnapshot(snapshot);
 
   return NextResponse.json({
     ok: true,
